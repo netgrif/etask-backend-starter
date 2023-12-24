@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://petriflow.com/petriflow.schema.xsd">
+    <id>configuration_tiles</id>
+    <initials>TIL</initials>
+    <title>Configuration tiles</title>
+    <defaultRole>false</defaultRole>
+    <anonymousRole>false</anonymousRole>
+    <transitionRole>false</transitionRole>
+
+    <processEvents>
+        <event type="upload">
+            <id>menu_import</id>
+
+            <actions phase="pre">
+                <action>
+                    createOrUpdateMenuItem("general", "general", "Case",
+                            "NOT (processIdentifier:\"filter\" OR processIdentifier:\"import_filters\" OR " +
+                            "processIdentifier:\"export_filters\" OR processIdentifier:\"org_group\" OR " +
+                            "processIdentifier:\"impersonation_config\" OR " +
+                            "processIdentifier:\"impersonation_users_select\" OR " +
+                            "processIdentifier:\"preference_filter_item\")",
+                            "folder",
+                            "All cases", [])
+
+                    createOrUpdateMenuItem("general_system", "general", "Case",
+                            "_exists_:processIdentifier",
+                            "settings",
+                            "All system cases", [])
+
+                    setUriNodeData("general", "General", null, "folder")
+                    setUriNodeDataFilters("general", ["general"])
+                </action>
+            </actions>
+        </event>
+    </processEvents>
+</document>
