@@ -13,7 +13,7 @@
 
     <groupId>com.netgrif</groupId>
     <artifactId>etask</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>eTask backend</name>
     <description>eTask application is a quick way to start with Netgrif Application Engine</description>
