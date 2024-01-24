@@ -13,7 +13,7 @@
 
     <groupId>com.netgrif</groupId>
     <artifactId>etask</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>eTask backend</name>
     <description>eTask application is a quick way to start with Netgrif Application Engine</description>
@@ -26,6 +26,7 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
 
     <organization>
         <name>NETGRIF, s.r.o.</name>
@@ -57,6 +58,20 @@
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.release>11</maven.compiler.release>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>oss.snapshots</id>
+            <name>OSSRH SNAPSHOT</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencies>
 
