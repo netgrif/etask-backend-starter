@@ -51,7 +51,7 @@ class EtaskActionDelegate extends ActionDelegate {
         List<PetriNet> nets = uriPaths.collect {
             UriNode node = getUri(it) as UriNode
             if (!node) return null
-            return petriNetService.findAllByUri(node.id)
+            return petriNetService.findAllByUriNodeId(node.id)
         }.findAll { it != null }.flatten() as List<PetriNet>
         List<String> roleIds = nets.collect { it.roles.keySet() as List }.flatten() as List<String>
         setUriNodeDataRoles(uri, roleIds)
