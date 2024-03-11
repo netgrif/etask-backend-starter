@@ -84,7 +84,7 @@ public class UriCountService implements IUriCountService {
             if (uriNode != null) {
                 List<CaseSearchRequest> filters = resolveUriTree(uriNode).stream().map(uriIdd -> CaseSearchRequest.builder()
                         .uriNodeId(uriIdd)
-                        .process(List.of(new CaseSearchRequest.PetriNet(FilterRunner.PREFERRED_FILTER_ITEM_NET_IDENTIFIER)))
+                        .process(List.of(new CaseSearchRequest.PetriNet(FilterRunner.PREFERRED_ITEM_NET_IDENTIFIER)))
                         .build()).collect(Collectors.toList());
                 List<Case> filterItems = elasticCaseService.search(filters, user.transformToLoggedUser(), PageRequest.ofSize(10000), locale, false).getContent();
                 List<Case> filterss = workflowService.findAllById(filterItems.stream()
