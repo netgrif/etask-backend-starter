@@ -70,17 +70,17 @@ public class UriCountService implements IUriCountService {
         List<UriNode> allUri = StreamSupport.stream(uriNodeRepository.findAll().spliterator(), false).collect(Collectors.toList());
         allUri.forEach(uriNode -> {
             if (uriNode.getLevel() != 0) {
-                UriNode parent = allUri.stream().filter(uri -> Objects.equals(uri.getId(), uriNode.getParentId())).findFirst().orElse(null);
+                UriNode parent = allUri.stream().filter(uri -> Objects.equals(uri.getStringId(), uriNode.getParentId())).findFirst().orElse(null);
                 uriNode.setParent(parent);
             }
             if (uriNode.getChildrenId() != null && !uriNode.getChildrenId().isEmpty()) {
-                Set<UriNode> childrens = allUri.stream().filter(uri -> uriNode.getChildrenId().contains(uri.getId())).collect(Collectors.toSet());
+                Set<UriNode> childrens = allUri.stream().filter(uri -> uriNode.getChildrenId().contains(uri.getStringId())).collect(Collectors.toSet());
                 uriNode.setChildren(childrens);
             }
         });
 
         queries.forEach((key, uriId) -> {
-            UriNode uriNode = allUri.stream().filter(uri -> Objects.equals(uri.getId(), uriId)).findFirst().orElse(null);
+            UriNode uriNode = allUri.stream().filter(uri -> Objects.equals(uri.getStringId(), uriId)).findFirst().orElse(null);
             if (uriNode != null) {
                 List<CaseSearchRequest> filters = resolveUriTree(uriNode).stream().map(uriIdd -> CaseSearchRequest.builder()
                         .uriNodeId(uriIdd)
@@ -107,7 +107,7 @@ public class UriCountService implements IUriCountService {
     private Set<String> resolveUriTree(UriNode uriNode) {
         Set<String> uriNodeIdTree = new HashSet<>();
         if (uriNode.getLevel() != 0) {
-            uriNodeIdTree.add(uriNode.getId());
+            uriNodeIdTree.add(uriNode.getStringId());
         }
         resolveUriTree(uriNode.getChildren(), uriNodeIdTree);
 
@@ -117,8 +117,8 @@ public class UriCountService implements IUriCountService {
     private void resolveUriTree(Set<UriNode> uriNodes, Set<String> uriNodeIdTree) {
         if (uriNodes != null && !uriNodes.isEmpty()) {
             uriNodes.forEach(uriNode -> {
-                if (!uriNodeIdTree.contains(uriNode.getId())) {
-                    uriNodeIdTree.add(uriNode.getId());
+                if (!uriNodeIdTree.contains(uriNode.getStringId())) {
+                    uriNodeIdTree.add(uriNode.getStringId());
                     resolveUriTree(uriNode.getChildren(), uriNodeIdTree);
                 }
             });
