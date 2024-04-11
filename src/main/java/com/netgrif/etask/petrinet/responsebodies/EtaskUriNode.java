@@ -34,6 +34,6 @@ public class EtaskUriNode extends UriNode {
     protected boolean isHidden = false;
 
     public EtaskUriNode(UriNode node) {
-        super(node.getId(), node.getUriPath(), node.getName(), node.getParentId(), node.getParent(), node.getChildrenId(), node.getChildren(), node.getLevel(), node.getContentTypes());
+        super(node.get_id(), node.getUriPath(), node.getName(), node.getParentId(), node.getParent(), node.getChildrenId(), node.getChildren(), node.getLevel(), node.getContentTypes());
     }
 }

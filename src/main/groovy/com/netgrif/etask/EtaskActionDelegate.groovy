@@ -77,11 +77,11 @@ class EtaskActionDelegate extends ActionDelegate {
      */
     void setUriNodeDataFilters(String uri, List<String> menuItemIdentifiers) {
         UriNode uriNode = getUri(uri) as UriNode
-        uriNodeDataRepository.findByUriNodeId(uriNode.getId()).ifPresentOrElse(data -> {
+        uriNodeDataRepository.findByUriNodeId(uriNode.getStringId()).ifPresentOrElse(data -> {
             data.setMenuItemIdentifiers(menuItemIdentifiers)
             uriNodeDataRepository.save(data)
         }, () -> {
-            uriNodeDataRepository.save(new UriNodeData(uriNode.getId(), null, null, false, false, null, menuItemIdentifiers))
+            uriNodeDataRepository.save(new UriNodeData(uriNode.getStringId(), null, null, false, false, null, menuItemIdentifiers))
         })
     }
 
@@ -92,11 +92,11 @@ class EtaskActionDelegate extends ActionDelegate {
      */
     void setUriNodeDataRoles(String uri, List<String> roleIds) {
         UriNode uriNode = getUri(uri) as UriNode
-        uriNodeDataRepository.findByUriNodeId(uriNode.getId()).ifPresentOrElse(data -> {
+        uriNodeDataRepository.findByUriNodeId(uriNode.getStringId()).ifPresentOrElse(data -> {
             data.setProcessRolesIds(roleIds as Set)
             uriNodeDataRepository.save(data)
         }, () -> {
-            uriNodeDataRepository.save(new UriNodeData(uriNode.getId(), null, null, false, false, roleIds as Set, null))
+            uriNodeDataRepository.save(new UriNodeData(uriNode.getStringId(), null, null, false, false, roleIds as Set, null))
         })
     }
 
@@ -114,7 +114,7 @@ class EtaskActionDelegate extends ActionDelegate {
         UriNode uriNode = getUri(uri) as UriNode
         uriNode.setName(title)
         uriService.save(uriNode)
-        uriNodeDataRepository.findByUriNodeId(uriNode.getId()).ifPresentOrElse(data -> {
+        uriNodeDataRepository.findByUriNodeId(uriNode.getStringId()).ifPresentOrElse(data -> {
             data.setIcon(icon)
             data.setSection(section)
             data.setIconSvg(isSvgIcon)
@@ -122,7 +122,7 @@ class EtaskActionDelegate extends ActionDelegate {
             data.setHidden(isHidden)
             uriNodeDataRepository.save(data)
         }, () -> {
-            uriNodeDataRepository.save(new UriNodeData(uriNode.getId(), section, icon, isSvgIcon, isHidden, roleIds as Set, null))
+            uriNodeDataRepository.save(new UriNodeData(uriNode.getStringId(), section, icon, isSvgIcon, isHidden, roleIds as Set, null))
         })
     }
 
