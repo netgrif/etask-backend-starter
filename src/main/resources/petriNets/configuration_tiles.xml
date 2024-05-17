@@ -10,25 +10,29 @@
     <processEvents>
         <event type="upload">
             <id>menu_import</id>
-
             <actions phase="pre">
                 <action>
-                    createOrUpdateMenuItem("general", "/general", "Case",
-                            "NOT (processIdentifier:\"filter\" OR processIdentifier:\"import_filters\" OR " +
+                    def body = new com.netgrif.application.engine.workflow.domain.menu.MenuItemBody("/general", "general", "All cases", "settings")
+                    createOrUpdateMenuItemAndFilter(body,"NOT (processIdentifier:\"filter\" OR processIdentifier:\"import_filters\" OR " +
                             "processIdentifier:\"export_filters\" OR processIdentifier:\"org_group\" OR " +
                             "processIdentifier:\"impersonation_config\" OR " +
                             "processIdentifier:\"impersonation_users_select\" OR " +
                             "processIdentifier:\"preference_filter_item\")",
-                            "folder",
-                            "All cases", [])
-
-                    createOrUpdateMenuItem("general_system", "/general", "Case",
-                            "_exists_:processIdentifier",
-                            "settings",
-                            "All system cases", [])
+                            "Case",
+                            "private",
+                            [""]
+                    )
 
                     setUriNodeData("/general", "General", null, "folder")
                     setUriNodeDataFilters("/general", ["general"])
+                </action>
+                <action>
+                    def body = new com.netgrif.application.engine.workflow.domain.menu.MenuItemBody("/general", "general_system", "All system cases", "settings")
+                    createOrUpdateMenuItemAndFilter(body,"_exists_:processIdentifier",
+                            "Case",
+                            "private",
+                            [""]
+                    )
                 </action>
             </actions>
         </event>
