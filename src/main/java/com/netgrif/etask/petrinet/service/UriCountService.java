@@ -11,7 +11,6 @@ import com.netgrif.application.engine.workflow.service.interfaces.IWorkflowServi
 import com.netgrif.etask.EtaskActionDelegate;
 import com.netgrif.etask.petrinet.service.interfaces.IUriCountService;
 import com.netgrif.etask.petrinet.web.requestbodies.UriCountRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -70,34 +69,34 @@ public class UriCountService implements IUriCountService {
         List<UriNode> allUri = StreamSupport.stream(uriNodeRepository.findAll().spliterator(), false).collect(Collectors.toList());
         allUri.forEach(uriNode -> {
             if (uriNode.getLevel() != 0) {
-                UriNode parent = allUri.stream().filter(uri -> Objects.equals(uri.getId(), uriNode.getParentId())).findFirst().orElse(null);
+                UriNode parent = allUri.stream().filter(uri -> Objects.equals(uri.getStringId(), uriNode.getParentId())).findFirst().orElse(null);
                 uriNode.setParent(parent);
             }
             if (uriNode.getChildrenId() != null && !uriNode.getChildrenId().isEmpty()) {
-                Set<UriNode> childrens = allUri.stream().filter(uri -> uriNode.getChildrenId().contains(uri.getId())).collect(Collectors.toSet());
+                Set<UriNode> childrens = allUri.stream().filter(uri -> uriNode.getChildrenId().contains(uri.getStringId())).collect(Collectors.toSet());
                 uriNode.setChildren(childrens);
             }
         });
 
         queries.forEach((key, uriId) -> {
-            UriNode uriNode = allUri.stream().filter(uri -> Objects.equals(uri.getId(), uriId)).findFirst().orElse(null);
+            UriNode uriNode = allUri.stream().filter(uri -> Objects.equals(uri.getStringId(), uriId)).findFirst().orElse(null);
             if (uriNode != null) {
                 List<CaseSearchRequest> filters = resolveUriTree(uriNode).stream().map(uriIdd -> CaseSearchRequest.builder()
                         .uriNodeId(uriIdd)
-                        .process(List.of(new CaseSearchRequest.PetriNet(FilterRunner.PREFERRED_FILTER_ITEM_NET_IDENTIFIER)))
+                        .process(List.of(new CaseSearchRequest.PetriNet(FilterRunner.PREFERRED_ITEM_NET_IDENTIFIER)))
                         .build()).collect(Collectors.toList());
                 List<Case> filterItems = elasticCaseService.search(filters, user.transformToLoggedUser(), PageRequest.ofSize(10000), locale, false).getContent();
-                List<Case> filterss = workflowService.findAllById(filterItems.stream()
+                List<Case> localFilters = workflowService.findAllById(filterItems.stream()
                         .map(aCase -> (List<String>) aCase.getDataField("filter_case").getValue())
                         .flatMap(Collection::stream)
                         .collect(Collectors.toList()));
-                List<CaseSearchRequest> queres = filterss.stream()
+                List<CaseSearchRequest> localQueries = localFilters.stream()
                         .map(aCase -> CaseSearchRequest.builder()
                                 .query((String) aCase.getDataField("filter").getValue())
                                 .build())
                         .collect(Collectors.toList());
 
-                count.put(key, (int) elasticCaseService.count(queres, user.transformToLoggedUser(), locale, false));
+                count.put(key, (int) elasticCaseService.count(localQueries, user.transformToLoggedUser(), locale, false));
             }
         });
 
@@ -107,7 +106,7 @@ public class UriCountService implements IUriCountService {
     private Set<String> resolveUriTree(UriNode uriNode) {
         Set<String> uriNodeIdTree = new HashSet<>();
         if (uriNode.getLevel() != 0) {
-            uriNodeIdTree.add(uriNode.getId());
+            uriNodeIdTree.add(uriNode.getStringId());
         }
         resolveUriTree(uriNode.getChildren(), uriNodeIdTree);
 
@@ -117,8 +116,8 @@ public class UriCountService implements IUriCountService {
     private void resolveUriTree(Set<UriNode> uriNodes, Set<String> uriNodeIdTree) {
         if (uriNodes != null && !uriNodes.isEmpty()) {
             uriNodes.forEach(uriNode -> {
-                if (!uriNodeIdTree.contains(uriNode.getId())) {
-                    uriNodeIdTree.add(uriNode.getId());
+                if (!uriNodeIdTree.contains(uriNode.getStringId())) {
+                    uriNodeIdTree.add(uriNode.getStringId());
                     resolveUriTree(uriNode.getChildren(), uriNodeIdTree);
                 }
             });

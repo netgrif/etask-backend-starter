@@ -94,7 +94,7 @@ public class EtaskUriController {
 
     protected EtaskUriNode loadUriNode(UriNode node) {
         EtaskUriNode customUriNode = new EtaskUriNode(node);
-        repository.findByUriNodeId(node.getId()).ifPresent(data -> {
+        repository.findByUriNodeId(node.getStringId()).ifPresent(data -> {
             customUriNode.setRoleIds(data.getProcessRolesIds());
             customUriNode.setMenuItemIdentifiers(data.getMenuItemIdentifiers());
             customUriNode.setIcon(data.getIcon());
